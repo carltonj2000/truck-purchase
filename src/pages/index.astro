@@ -1,16 +1,16 @@
 ---
-
+import Layout from "../layouts/Layout.astro"
+import Trucks from "./_trucks/trucks.tsx";
+import {data} from "./_trucks/trucks1.ts";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout>
+	<h1 class="bg-red-100 text-center py-3">Truck Purchase</h1>
+
+	<p class="text-center mt-3">
+  	The data present below was take from the 
+	  <a href="https://www.toyota.com/">Toyota</a>
+	  website by selecting <em>Shopping</em> and then <em>Search Inventory</em>.
+	</p>
+  <Trucks data={data} />
+</Layout>

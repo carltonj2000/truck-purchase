@@ -1,16 +1,16 @@
 ---
-import Layout from "../layouts/Layout.astro"
-import Trucks from "./_trucks/trucks.tsx";
-import {data} from "./_trucks/trucks1.ts";
+import Layout from "../layouts/Layout.astro";
+import Trucks2 from "./_trucks/trucks2.astro";
 ---
 
 <Layout>
 	<h1 class="bg-red-100 text-center py-3">Truck Purchase</h1>
 
 	<p class="text-center mt-3">
-  	The data present below was take from the 
-	  <a href="https://www.toyota.com/">Toyota</a>
-	  website by selecting <em>Shopping</em> and then <em>Search Inventory</em>.
+		The data present below was take from the
+		<a href="https://www.toyota.com/">Toyota</a> website.
+		<br />
+		Click <em>Shopping</em> and then <em>Search Inventory</em>.
 	</p>
-  <Trucks data={data} />
+	<Trucks2 />
 </Layout>

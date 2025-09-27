@@ -1,7 +1,8 @@
 import { truckFilter } from "./trucks1.ts";
 
-const Trucks = ({ data }: { data: any }) => {
+const Trucks = ({ data, mfgOptVis }: { data: any; mfgOptVis: boolean }) => {
   const trucks = truckFilter(data.trucks);
+
   return (
     <div className="mt-6 flex flex-col items-center">
       <h2>
@@ -12,7 +13,11 @@ const Trucks = ({ data }: { data: any }) => {
           <tr className="py-2 bg-slate-300">
             <th className="py-2">VIN, Sticker, Dlr</th>
             <th className="py-2">Price</th>
-            <th className="py-2">Mfg Options</th>
+            <th className="py-2">
+              <span>Mfg Options</span>
+              <br />
+              {mfgOptVis ? "hi" : "by"}
+            </th>
             <th className="py-2">Dlr Options</th>
           </tr>
         </thead>

@@ -1,0 +1,126 @@
+---
+import { truckFilter } from "./trucks1";
+import { data } from "./trucks1";
+const trucks = truckFilter(data.trucks);
+---
+
+<div class="mt-5 flex flex-col items-center">
+  <h2>
+    Truck Options On {data.date} at {data.time}
+  </h2>
+  <p>View/Hide
+  <button id="mfgOpt" class="px-2 py-1 rounded-xl bg-slate-300">Mfg</button>
+  or
+  <button id="dlrOpt" class="px-2 py-1 rounded-xl bg-slate-300">Dlt</button> Options.
+  </p>
+  <table class="table-auto ml-2 mt-5">
+    <thead class="text-sm">
+      <tr class="py-2 bg-slate-300">
+        <th class="py-2">VIN, Sticker, Dlr</th>
+        <th class="py-2">Price</th>
+        <th class="mfgOptVis py-2">Mfg</th>
+        <th class="dlrOptVis py-2">Dlr</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        trucks.map((truck: any) => {
+          return (
+            <tr class="odd:bg-slate-100 even:bg-slate-200 border-y border-gray-300">
+              <td class="px-2 py-2 text-xs align-top">
+                <div class="flex flex-col items-end">
+                  <a href={`/windowStickers/${truck.vin}.pdf`}>
+                    <div>{truck.vin}</div>
+                  </a>
+                  <div>{truck.stickerDate}</div>
+                  <div>{truck.exteriorColorShort}</div>
+                  <div>{truck.dealerShort}</div>
+                </div>
+              </td>
+              <td class="px-2 py-2 text-sm font-mono w-[120px]">
+                <div class="flex justify-between items-end w-full">
+                  <span class="text-xs text-slate-400">bsrp</span>
+                  <span>{truck.bsrp}</span>
+                </div>
+                <div class="flex justify-between items-end w-full">
+                  <span class="text-xs text-slate-400">srp</span>
+                  <span>{truck.srp}</span>
+                </div>
+                <div class="flex justify-between items-end w-full">
+                  <span class="text-xs text-slate-400">list</span>
+                  <span>{truck.listPrice}</span>
+                </div>
+                <div class="flex justify-between items-end w-full">
+                  <span class="text-xs text-slate-400">down</span>
+                  <span>{truck.downPayment}</span>
+                </div>
+                <div class="flex justify-between items-end w-full">
+                  <span class="text-xs text-slate-700">Total</span>
+                  <span>{truck.listPrice + truck.downPayment}</span>
+                </div>
+              </td>
+              <td class="mfgOptVis px-2 py-2 text-xs">
+                {truck.options.manufacture.map(({ name }: { name: any }) => (
+                  <span class="bg-slate-50 px-2 py-1 rounded-lg">{name}</span>
+                ))}
+              </td>
+              <td class="dlrOptVis px-2 py-2 text-xs">
+                {!truck.options.dealer ? (
+                  <span>None</span>
+                ) : (
+                  truck.options.dealer.map(({ name }: { name: any }) => (
+                    <span class="bg-slate-50 px-2 py-1 rounded-lg">{name}</span>
+                  ))
+                )}
+              </td>
+            </tr>
+          );
+        })
+      }
+    </tbody>
+  </table>
+</div>
+
+<script is:inline>
+  let mfgVis = true;
+  const mfgOpt = document.getElementById("mfgOpt");
+  const mfgOptVis = Array.from(document.querySelectorAll(".mfgOptVis"));
+  if (mfgOpt) {
+    if (mfgOptVis.length) {
+      mfgOpt.addEventListener("click", () => {
+        if (mfgVis) {
+          mfgOptVis.forEach((mov) => mov.classList.add("hidden"));
+        } else {
+          mfgOptVis.forEach((mov) => mov.classList.remove("hidden"));
+        }
+        mfgVis = !mfgVis;
+      });
+    } else console.error("Failed finding mfgOptVis");
+  } else console.error("Failed finding mfgOpt");
+  
+  let dlrVis = true;
+  const dlrOpt = document.getElementById("dlrOpt");
+  const dlrOptVis = Array.from(document.querySelectorAll(".dlrOptVis"));
+  if (dlrOpt) {
+    if (dlrOptVis.length) {
+      dlrOpt.addEventListener("click", () => {
+        if (dlrVis) {
+          dlrOptVis.forEach((mov) => mov.classList.add("hidden"));
+        } else {
+          dlrOptVis.forEach((mov) => mov.classList.remove("hidden"));
+        }
+        dlrVis = !dlrVis;
+      });
+    } else console.error("Failed finding mfgOptVis");
+  } else console.error("Failed finding mfgOpt");
+
+ mfgOpt.click();
+ dlrOpt.click();
+
+</script>
+
+<style>
+  .hidden {
+    display: none;
+  }
+</style>

@@ -27,22 +27,45 @@ const price = (
 const strickerDate = (date: any) => ({ stickerDate: date });
 
 const optsF = (...opts: any[]) =>
-  opts.reduce((acc, opt) => [...acc, opt()], []);
+  opts.reduce(
+    (acc, optF) => {
+      const opt = optF();
+      return {
+        total: acc.total + opt.price,
+        opts: [...acc.opts, opt],
+      };
+    },
+    { opts: [], total: 0 },
+  );
 
 const mFullSpare = () => ({ name: "Full-Size Spare Tire", price: 85 });
-const mUpgrdCld = () => ({ name: "SR5 Upgrade + Cold Weather Package" });
-const mfcSizeLed = {
+const mUpgrdCld = () => ({
+  name: "SR5 Upgrade + Cold Weather Package",
+  price: 0,
+});
+const mSideLed = () => ({
   name: "IP Side Accessory - LED Lantern",
   price: 160,
-};
+});
+const mFlrLnrs = () => ({ name: "All Weather Floor Liners", price: 199 });
+const mTailGt = () => ({ name: "Tailgate Insert", price: 99 });
+const mTubStep = () => ({ name: "Oval Tube Step", price: 600 });
+const mBedLnr = () => ({ name: "Spray-On Bed Liner", price: 575 });
+const mDorGrd = () => ({ name: "Door Edge Guard", price: 160 });
+const mDelivery = () => ({ name: "Delivery, Proc & Handling ", price: 1495 });
 
-/*
-2T. All Weather Floor Liners 199.00
-T6. Tailgate Insert - Black 99.00
-R2. Oval Tube Step - Black 600.00
-L5. Spray-On Bed Liner 575.00
-D5. Door Edge Guard 160.00
- */
+const tState = () => ({ name: "State Tax", price: 3039 });
+const tCounty = () => ({ name: "County Tax", price: 677 });
+const tDoc = () => ({ name: "Doc Fee", price: 499 });
+const tTitle = () => ({ name: "Title Fee", price: 20 });
+const tTitleProc = () => ({ name: "Title Processing Fee", price: 8 });
+const tReg = () => ({ name: "Registration Fee", price: 38 });
+const tVinIns = () => ({ name: "Vin Inspection Fee", price: 1 });
+const tPlate = () => ({ name: "Plate Cost Recovery Fee", price: 8 });
+const tPrison = () => ({ name: "Prison Industry Fee", price: 1 });
+const tPermit = () => ({ name: "Drive Away Permit", price: 8 });
+const tTire = () => ({ name: "Tire Fee", price: 5 });
+
 export const trucks = [
   {
     vin: "3TMLB5JN1SM156384",
@@ -52,7 +75,29 @@ export const trucks = [
     ...price(40490, 43863, 43863, 4887, 4303),
     ...strickerDate("2025-06-14"),
     options: {
-      manufacture: optsF(mFullSpare),
+      manufacture: optsF(
+        mFullSpare,
+        mSideLed,
+        mFlrLnrs,
+        mTailGt,
+        mTubStep,
+        mBedLnr,
+        mDorGrd,
+        mDelivery,
+      ),
+      tax: optsF(
+        tState,
+        tCounty,
+        tDoc,
+        tTitle,
+        tTitleProc,
+        tReg,
+        tVinIns,
+        tPlate,
+        tPrison,
+        tPermit,
+        tTire,
+      ),
     },
   },
   {
@@ -63,7 +108,8 @@ export const trucks = [
     ...price(40090, 43043, 44638, 4964, 4368),
     ...strickerDate("2025-07-05"),
     options: {
-      manufacture: [mFullSpare()],
+      manufacture: optsF(mFullSpare),
+      tax: optsF(tState),
     },
   },
   {
@@ -75,7 +121,8 @@ export const trucks = [
     ...price(40490, 44038, 45633, 5064),
     ...strickerDate("2025-06-25"),
     options: {
-      manufacture: [mFullSpare()],
+      manufacture: optsF(mFullSpare),
+      tax: optsF(tState),
     },
   },
   {
@@ -83,7 +130,8 @@ export const trucks = [
     ...SR5,
     ...exteriorColorWhite,
     options: {
-      manufacture: [mFullSpare(), mUpgrdCld()],
+      manufacture: optsF(mFullSpare, mUpgrdCld),
+      tax: optsF(tState),
     },
   },
   {
@@ -91,7 +139,8 @@ export const trucks = [
     ...SR5,
     ...exteriorColorWhite,
     options: {
-      manufacture: [mFullSpare(), mUpgrdCld()],
+      manufacture: optsF(mFullSpare, mUpgrdCld),
+      tax: optsF(tState),
     },
   },
   {
@@ -99,7 +148,8 @@ export const trucks = [
     ...SR5,
     ...exteriorColorWhite,
     options: {
-      manufacture: [mFullSpare(), mUpgrdCld()],
+      manufacture: optsF(mFullSpare, mUpgrdCld),
+      tax: optsF(tState),
     },
   },
   {
@@ -110,7 +160,8 @@ export const trucks = [
     ...price(40490, 43544, 43544, 4855),
     ...strickerDate("2025-06-18"),
     options: {
-      manufacture: [mFullSpare()],
+      manufacture: optsF(mFullSpare),
+      tax: optsF(tState),
     },
   },
   {
@@ -121,7 +172,8 @@ export const trucks = [
     ...price(40490, 43778, 45373, 5038),
     ...strickerDate("2025-07-18"),
     options: {
-      manufacture: [mFullSpare()],
+      manufacture: optsF(mFullSpare),
+      tax: optsF(tState),
     },
   },
   {
@@ -132,7 +184,8 @@ export const trucks = [
     ...price(40490, 43272, 45647, 5065),
     ...strickerDate("2025-08-01"),
     options: {
-      manufacture: [mFullSpare()],
+      manufacture: optsF(mFullSpare),
+      tax: optsF(tState),
     },
   },
   {
@@ -140,7 +193,8 @@ export const trucks = [
     ...SR5,
     ...exteriorColorSilver,
     options: {
-      manufacture: [mFullSpare(), mUpgrdCld()],
+      manufacture: optsF(mFullSpare, mUpgrdCld),
+      tax: optsF(tState),
     },
   },
   {
@@ -148,7 +202,8 @@ export const trucks = [
     ...SR5,
     ...exteriorColorSilver,
     options: {
-      manufacture: [mFullSpare(), mUpgrdCld()],
+      manufacture: optsF(mFullSpare, mUpgrdCld),
+      tax: optsF(tState),
     },
   },
   {
@@ -156,7 +211,8 @@ export const trucks = [
     ...SR5,
     ...exteriorColorSilver,
     options: {
-      manufacture: [mFullSpare(), mUpgrdCld()],
+      manufacture: optsF(mFullSpare, mUpgrdCld),
+      tax: optsF(tState),
     },
   },
   {
@@ -164,7 +220,8 @@ export const trucks = [
     ...SR5,
     ...exteriorColorSilver,
     options: {
-      manufacture: [mFullSpare(), mUpgrdCld()],
+      manufacture: optsF(mFullSpare, mUpgrdCld),
+      tax: optsF(tState),
     },
   },
   {
@@ -172,7 +229,8 @@ export const trucks = [
     ...SR5,
     ...exteriorColorSilver,
     options: {
-      manufacture: [mFullSpare(), mUpgrdCld()],
+      manufacture: optsF(mFullSpare, mUpgrdCld),
+      tax: optsF(tState),
     },
   },
   {
@@ -180,7 +238,8 @@ export const trucks = [
     ...SR5,
     ...exteriorColorSilver,
     options: {
-      manufacture: [mFullSpare(), mUpgrdCld()],
+      manufacture: optsF(mFullSpare, mUpgrdCld),
+      tax: optsF(tState),
     },
   },
   {
@@ -188,7 +247,8 @@ export const trucks = [
     ...SR5,
     ...exteriorColorSilver,
     options: {
-      manufacture: [mFullSpare(), mUpgrdCld()],
+      manufacture: optsF(mFullSpare, mUpgrdCld),
+      tax: optsF(tState),
     },
   },
   {
@@ -199,7 +259,8 @@ export const trucks = [
     ...price(40490, 47364, 47364, 2000),
     ...strickerDate("2025-08-01"),
     options: {
-      manufacture: [mFullSpare()],
+      manufacture: optsF(mFullSpare),
+      tax: optsF(tState),
     },
   },
   {
@@ -207,7 +268,8 @@ export const trucks = [
     ...SR5,
     ...exteriorColorSilver,
     options: {
-      manufacture: [mFullSpare(), mUpgrdCld()],
+      manufacture: optsF(mFullSpare, mUpgrdCld),
+      tax: optsF(tState),
     },
   },
   {
@@ -215,7 +277,8 @@ export const trucks = [
     ...SR5,
     ...exteriorColorSilver,
     options: {
-      manufacture: [mFullSpare(), mUpgrdCld()],
+      manufacture: optsF(mFullSpare, mUpgrdCld),
+      tax: optsF(tState),
     },
   },
 ];
@@ -227,16 +290,13 @@ export const data = {
 };
 
 export const truckFilter = (trucks: any) =>
-  trucks.filter(
-    (t: any) =>
-      t.options.manufacture.filter((mo: any) => mo.name === mUpgrdCld().name)
-        .length === 0,
-  );
-
-export const skipCold = (options: any) => skipOption(mUpgrdCld, options);
-export const skipOption = (option: any, options: any) => {
-  return options.filter((o: any) => o.name === option);
-};
+  trucks.filter((t: any) => {
+    console.log(t);
+    const res = t.options.manufacture.opts.filter(
+      (mo: any) => mo.name === mUpgrdCld.name,
+    );
+    return res.length === 0;
+  });
 
 /* Findlay Henderson
  * 3TYKB5FN1ST43G934 trd sport for around 48K arriving October 31st.

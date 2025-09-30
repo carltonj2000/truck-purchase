@@ -17,12 +17,14 @@ const price = (
   listPrice: number,
   downPayment: number,
   taxFees?: number,
+  rebate?: number,
 ) => ({
   bsrp,
   srp,
   listPrice,
   downPayment,
   taxFees,
+  rebate,
 });
 const strickerDate = (sdate: string) => ({ stickerDate: sdate });
 
@@ -37,8 +39,6 @@ type OptsT = {
 };
 
 type OptFT = () => OptT;
-
-type OptsFT = (...opts: OptFT[]) => OptT;
 
 const optsF = (...opts: OptFT[]): OptsT =>
   opts.reduce<OptsT>(
@@ -86,7 +86,31 @@ const tPrison: OptFT = () => ({ name: "Prison Industry Fee", price: 1 });
 const tPermit: OptFT = () => ({ name: "Drive Away Permit", price: 8 });
 const tTire: OptFT = () => ({ name: "Tire Fee", price: 5 });
 
-type TruckT = {
+const dCharg: OptFT = () => ({ name: "Charging Cable Kit", price: 0 });
+const dTint: OptFT = () => ({
+  name: "XPEL Solar Plate Premium Tint",
+  price: 0,
+});
+const dHoodPro: OptFT = () => ({
+  name: "XPEL Paint Protection Partial Hood & Fender Fronts",
+  price: 0,
+});
+const dDoorPro: OptFT = () => ({
+  name: "XPEL Paint Protection Door",
+  price: 0,
+});
+const dFlrLnrs: OptFT = () => ({ name: "All Weather Floor Liners", price: 0 });
+const dWhelLcks: OptFT = () => ({ name: "Wheel Locks", price: 0 });
+const dConPkg: OptFT = () => ({
+  name: "Toyota of LV Convenience Pkg",
+  price: 1995,
+});
+const dConPkgDis: OptFT = () => ({
+  name: "Convenience Pkg Discount",
+  price: -1995,
+});
+
+export type TruckT = {
   vin: string;
   trim: string;
   dealer?: string;
@@ -97,12 +121,14 @@ type TruckT = {
   srp?: number;
   listPrice?: number;
   downPayment?: number;
+  cashRebate?: number;
   taxFees?: number;
   stickerDate?: string;
   options: {
     manufacture: OptsT;
-    tax: OptsT;
+    dealer?: OptsT;
   };
+  tax?: OptsT;
 };
 
 export const trucks: TruckT[] = [
@@ -111,7 +137,7 @@ export const trucks: TruckT[] = [
     ...SR5,
     ...exteriorColorWhite,
     ...dealerDw,
-    ...price(40490, 43863, 43863, 4887, 4303),
+    ...price(40490, 43863, 43863, 4887, 4303, 500),
     ...strickerDate("2025-06-14"),
     options: {
       manufacture: optsF(
@@ -124,20 +150,30 @@ export const trucks: TruckT[] = [
         mDorGrd,
         mDelivery,
       ),
-      tax: optsF(
-        tState,
-        tCounty,
-        tDoc,
-        tTitle,
-        tTitleProc,
-        tReg,
-        tVinIns,
-        tPlate,
-        tPrison,
-        tPermit,
-        tTire,
+      dealer: optsF(
+        dCharg,
+        dTint,
+        dHoodPro,
+        dDoorPro,
+        dFlrLnrs,
+        dWhelLcks,
+        dConPkg,
+        dConPkgDis,
       ),
     },
+    tax: optsF(
+      tState,
+      tCounty,
+      tDoc,
+      tTitle,
+      tTitleProc,
+      tReg,
+      tVinIns,
+      tPlate,
+      tPrison,
+      tPermit,
+      tTire,
+    ),
   },
   {
     vin: "3TMLB5JN9SM163910",

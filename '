@@ -1,8 +1,7 @@
 ---
 import { truckFilter } from "./trucks1";
 import { data } from "./trucks1";
-import type { TruckT } from "./trucks1";
-const trucks: TruckT[] = truckFilter(data.trucks);
+const trucks = truckFilter(data.trucks);
 ---
 
 <div class="mt-3 flex flex-col items-center">
@@ -30,7 +29,6 @@ const trucks: TruckT[] = truckFilter(data.trucks);
     <tbody>
       {
         trucks.map((truck: any) => {
-          const tax = truck.tax ? truck.tax.total : 0;
           return (
             <tr class="odd:bg-slate-100 even:bg-slate-200 border-y border-gray-300">
               <td class="px-2 py-2 text-xs align-top">
@@ -68,14 +66,14 @@ const trucks: TruckT[] = truckFilter(data.trucks);
                 </div>
                 <div class="flex justify-between items-end w-full">
                   <span class="text-xs text-slate-400">tax Fees</span>
-                  <span>{tax}</span>
+                  <span>{truck.options.tax.total}</span>
                 </div>
                 <div class="flex justify-between items-end w-full font-semibold">
                   <span class="text-xs text-slate-700">Total</span>
-                  <span>
-                    {truck.listPrice +
-                      tax +
-                      (truck.options.dealer ? truck.options.dealer.total : 0)}
+                  <span class="text-slate-400">
+                    {truck.listPrice + truck.options.dealer
+                      ? truck.options.dealer.total
+                      : 0}
                   </span>
                 </div>
                 <div class="flex justify-between items-end w-full">
@@ -84,7 +82,11 @@ const trucks: TruckT[] = truckFilter(data.trucks);
                 </div>
                 <div class="flex justify-between items-end w-full font-semibold">
                   <span class="text-xs text-slate-700">Financed</span>
-                  <span>{truck.listPrice + tax - truck.downPayment}</span>
+                  <span>
+                    {truck.listPrice +
+                      truck.options.tax.total -
+                      truck.downPayment}
+                  </span>
                 </div>
               </td>
               <td class="mfgOptVis px-2 py-2 text-xs align-top">
@@ -124,24 +126,20 @@ const trucks: TruckT[] = truckFilter(data.trucks);
                 )}
               </td>
               <td class="taxOptVis px-2 py-2 text-xs align-top">
-                {truck.tax ? (
-                  <div class="flex flex-col">
-                    {
-                      truck.tax.opts.map(({name, price}) => (
-                        <div class="flex justify-between">
-                          <span class="px-2 py-1 rounded-lg">{name}</span>
-                          <span>{price}</span>
-                        </div>
-                      ))
-                    }
-                    <div class="flex justify-between">
-                      <span class="px-2 py-1 rounded-lg">Total</span>
-                      <span>{truck.tax.total}</span>
-                    </div>
+                <div class="flex flex-col">
+                  {truck.options.tax.opts.map(
+                    ({ name, price }: { name: any; price: number }) => (
+                      <div class="flex justify-between">
+                        <span class="px-2 py-1 rounded-lg">{name}</span>
+                        <span>{price}</span>
+                      </div>
+                    ),
+                  )}
+                  <div class="flex justify-between">
+                    <span class="px-2 py-1 rounded-lg">Total</span>
+                    <span>{truck.options.tax.total}</span>
                   </div>
-                ) : (
-                  <span>will not be merged</span>
-                )}
+                </div>
               </td>
             </tr>
           );
@@ -184,7 +182,7 @@ const trucks: TruckT[] = truckFilter(data.trucks);
     } else console.error("Failed finding mfgOptVis");
   } else console.error("Failed finding mfgOpt");
 
-  // mfgOpt.click();
+  mfgOpt.click();
   // dlrOpt.click();
 </script>
 

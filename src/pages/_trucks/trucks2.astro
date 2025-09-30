@@ -47,16 +47,20 @@ const trucks = truckFilter(data.trucks);
                   <span>{truck.bsrp}</span>
                 </div>
                 <div class="flex justify-between items-end w-full">
-                  <span class="text-xs text-slate-400">srp</span>
-                  <span>{truck.srp}</span>
-                </div>
-                <div class="flex justify-between items-end w-full">
                   <span class="text-xs text-slate-400">mfg opts</span>
                   <span>{truck.srp - truck.bsrp}</span>
                 </div>
                 <div class="flex justify-between items-end w-full">
+                  <span class="text-xs text-slate-400">srp</span>
+                  <span>{truck.srp}</span>
+                </div>
+                <div class="flex justify-between items-end w-full">
                   <span class="text-xs text-slate-400">list</span>
                   <span>{truck.listPrice}</span>
+                </div>
+                <div class="flex justify-between items-end w-full">
+                  <span class="text-xs text-slate-400">tax Fees</span>
+                  <span class="text-slate-400">{truck.options.tax.total}</span>
                 </div>
                 <div class="flex justify-between items-end w-full">
                   <span class="text-xs text-slate-400">down</span>

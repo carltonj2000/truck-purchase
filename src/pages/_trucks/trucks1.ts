@@ -12,11 +12,11 @@ const dealerFindlay = { dealer: "Findlay", dealerShort: "fn" };
 const dealerAutoNation = { dealer: "AutoNation", dealerShort: "an" };
 const dealerCc = { dealer: "Centennial Center", dealerShort: "cc" };
 const price = (
-  bsrp: any,
-  srp: any,
-  listPrice: any,
-  downPayment: any,
-  taxFees: any,
+  bsrp: number,
+  srp: number,
+  listPrice: number,
+  downPayment: number,
+  taxFees?: number,
 ) => ({
   bsrp,
   srp,
@@ -24,10 +24,24 @@ const price = (
   downPayment,
   taxFees,
 });
-const strickerDate = (date: any) => ({ stickerDate: date });
+const strickerDate = (sdate: string) => ({ stickerDate: sdate });
 
-const optsF = (...opts: any[]) =>
-  opts.reduce(
+type OptT = {
+  name: string;
+  price: number;
+};
+
+type OptsT = {
+  opts: OptT[];
+  total: number;
+};
+
+type OptFT = () => OptT;
+
+type OptsFT = (...opts: OptFT[]) => OptT;
+
+const optsF = (...opts: OptFT[]): OptsT =>
+  opts.reduce<OptsT>(
     (acc, optF) => {
       const opt = optF();
       return {
@@ -38,35 +52,60 @@ const optsF = (...opts: any[]) =>
     { opts: [], total: 0 },
   );
 
-const mFullSpare = () => ({ name: "Full-Size Spare Tire", price: 85 });
-const mUpgrdCld = () => ({
+const mFullSpare: OptFT = () => ({ name: "Full-Size Spare Tire", price: 85 });
+const mUpgrdCld: OptFT = () => ({
   name: "SR5 Upgrade + Cold Weather Package",
   price: 0,
 });
-const mSideLed = () => ({
+const mSideLed: OptFT = () => ({
   name: "IP Side Accessory - LED Lantern",
   price: 160,
 });
-const mFlrLnrs = () => ({ name: "All Weather Floor Liners", price: 199 });
-const mTailGt = () => ({ name: "Tailgate Insert", price: 99 });
-const mTubStep = () => ({ name: "Oval Tube Step", price: 600 });
-const mBedLnr = () => ({ name: "Spray-On Bed Liner", price: 575 });
-const mDorGrd = () => ({ name: "Door Edge Guard", price: 160 });
-const mDelivery = () => ({ name: "Delivery, Proc & Handling ", price: 1495 });
+const mFlrLnrs: OptFT = () => ({
+  name: "All Weather Floor Liners",
+  price: 199,
+});
+const mTailGt: OptFT = () => ({ name: "Tailgate Insert", price: 99 });
+const mTubStep: OptFT = () => ({ name: "Oval Tube Step", price: 600 });
+const mBedLnr: OptFT = () => ({ name: "Spray-On Bed Liner", price: 575 });
+const mDorGrd: OptFT = () => ({ name: "Door Edge Guard", price: 160 });
+const mDelivery: OptFT = () => ({
+  name: "Delivery, Proc & Handling ",
+  price: 1495,
+});
 
-const tState = () => ({ name: "State Tax", price: 3039 });
-const tCounty = () => ({ name: "County Tax", price: 677 });
-const tDoc = () => ({ name: "Doc Fee", price: 499 });
-const tTitle = () => ({ name: "Title Fee", price: 20 });
-const tTitleProc = () => ({ name: "Title Processing Fee", price: 8 });
-const tReg = () => ({ name: "Registration Fee", price: 38 });
-const tVinIns = () => ({ name: "Vin Inspection Fee", price: 1 });
-const tPlate = () => ({ name: "Plate Cost Recovery Fee", price: 8 });
-const tPrison = () => ({ name: "Prison Industry Fee", price: 1 });
-const tPermit = () => ({ name: "Drive Away Permit", price: 8 });
-const tTire = () => ({ name: "Tire Fee", price: 5 });
+const tState: OptFT = () => ({ name: "State Tax", price: 3039 });
+const tCounty: OptFT = () => ({ name: "County Tax", price: 677 });
+const tDoc: OptFT = () => ({ name: "Doc Fee", price: 499 });
+const tTitle: OptFT = () => ({ name: "Title Fee", price: 20 });
+const tTitleProc: OptFT = () => ({ name: "Title Processing Fee", price: 8 });
+const tReg: OptFT = () => ({ name: "Registration Fee", price: 38 });
+const tVinIns: OptFT = () => ({ name: "Vin Inspection Fee", price: 1 });
+const tPlate: OptFT = () => ({ name: "Plate Cost Recovery Fee", price: 8 });
+const tPrison: OptFT = () => ({ name: "Prison Industry Fee", price: 1 });
+const tPermit: OptFT = () => ({ name: "Drive Away Permit", price: 8 });
+const tTire: OptFT = () => ({ name: "Tire Fee", price: 5 });
 
-export const trucks = [
+type TruckT = {
+  vin: string;
+  trim: string;
+  dealer?: string;
+  dealerShort?: string;
+  exteriorColor: string;
+  exteriorColorShort: string;
+  bsrp?: number;
+  srp?: number;
+  listPrice?: number;
+  downPayment?: number;
+  taxFees?: number;
+  stickerDate?: string;
+  options: {
+    manufacture: OptsT;
+    tax: OptsT;
+  };
+};
+
+export const trucks: TruckT[] = [
   {
     vin: "3TMLB5JN1SM156384",
     ...SR5,
@@ -289,11 +328,10 @@ export const data = {
   trucks,
 };
 
-export const truckFilter = (trucks: any) =>
-  trucks.filter((t: any) => {
-    console.log(t);
+export const truckFilter = (trucks: TruckT[]) =>
+  trucks.filter((t: TruckT) => {
     const res = t.options.manufacture.opts.filter(
-      (mo: any) => mo.name === mUpgrdCld.name,
+      (mo: OptT) => mo.name === mUpgrdCld().name,
     );
     return res.length === 0;
   });

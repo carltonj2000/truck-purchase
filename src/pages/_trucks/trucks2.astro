@@ -7,7 +7,7 @@ const trucks: TruckT[] = truckFilter(data.trucks);
 
 <div class="mt-3 flex flex-col items-center">
   <h2>
-    Truck Options On {data.date} at {data.time}
+    Truck.On {data.date} at {data.time}
   </h2>
   <p>
     View/Hide
@@ -15,15 +15,15 @@ const trucks: TruckT[] = truckFilter(data.trucks);
     or
     <button id="dlrOpt" class="px-2 py-1 rounded-xl bg-slate-300">Dlr</button>
     or
-    <button id="taxOpt" class="px-2 py-1 rounded-xl bg-slate-300">Tax</button> Options.
+    <button id="taxOpt" class="px-2 py-1 rounded-xl bg-slate-300">Tax</button>.
   </p>
   <table class="table-auto ml-2 mt-4">
     <thead class="text-sm">
       <tr class="py-2 bg-slate-300">
         <th class="py-2">VIN, Sticker, Dlr</th>
         <th class="py-2">Price</th>
-        <th class="mfgOptVis py-2">Mfg Options</th>
-        <th class="dlrOptVis py-2">Dlr Options</th>
+        <th class="mfgOptVis py-2">Mfg</th>
+        <th class="dlrOptVis py-2">Dlr</th>
         <th class="taxOptVis py-2">Tax And Fees</th>
       </tr>
     </thead>
@@ -43,7 +43,7 @@ const trucks: TruckT[] = truckFilter(data.trucks);
                   <div>{truck.dealerShort}</div>
                 </div>
               </td>
-              <td class="px-2 py-2 text-sm font-mono w-[120px] align-top">
+              <td class="px-2 py-2 text-sm font-mono align-top">
                 <div class="flex justify-between items-end w-full">
                   <span class="text-xs text-slate-400">bsrp</span>
                   <span>{truck.bsrp}</span>
@@ -59,7 +59,7 @@ const trucks: TruckT[] = truckFilter(data.trucks);
                 <div class="flex justify-between items-end w-full">
                   <span class="text-xs text-slate-400">dlr opts</span>
                   <span>
-                    {truck.options.dealer ? truck.options.dealer.total : 0}
+                    {truck.dealer ? truck.dealer.total : 0}
                   </span>
                 </div>
                 <div class="flex justify-between items-end w-full">
@@ -75,12 +75,20 @@ const trucks: TruckT[] = truckFilter(data.trucks);
                   <span>
                     {truck.listPrice +
                       tax +
-                      (truck.options.dealer ? truck.options.dealer.total : 0)}
+                      (truck.dealer ? truck.dealer.total : 0)}
                   </span>
                 </div>
                 <div class="flex justify-between items-end w-full">
                   <span class="text-xs text-slate-400">down</span>
                   <span>{truck.downPayment}</span>
+                </div>
+                <div class="flex justify-between items-end w-full">
+                  <span class="text-xs text-slate-400">finance dis</span>
+                  <span>{truck.financeDiscount}</span>
+                </div>
+                <div class="flex justify-between items-end w-full">
+                  <span class="text-xs text-slate-400">finance down</span>
+                  <span>{truck.downPayment - truck.financeDiscount}</span>
                 </div>
                 <div class="flex justify-between items-end w-full font-semibold">
                   <span class="text-xs text-slate-700">Financed</span>
@@ -89,7 +97,7 @@ const trucks: TruckT[] = truckFilter(data.trucks);
               </td>
               <td class="mfgOptVis px-2 py-2 text-xs align-top">
                 <div class="flex flex-col">
-                  {truck.options.manufacture.opts.map(
+                  {truck.manufacture.opts.map(
                     ({ name, price }: { name: any; price: number }) => (
                       <div class="flex justify-between">
                         <span class="px-2 py-1 rounded-lg">{name}</span>
@@ -99,14 +107,14 @@ const trucks: TruckT[] = truckFilter(data.trucks);
                   )}
                   <div class="flex justify-between">
                     <span class="px-2 py-1 rounded-lg">Total</span>
-                    <span>{truck.options.manufacture.total}</span>
+                    <span>{truck.manufacture.total}</span>
                   </div>
                 </div>
               </td>
               <td class="dlrOptVis px-2 py-2 text-xs align-top">
-                {truck.options.dealer ? (
+                {truck.dealer ? (
                   <div class="flex flex-col">
-                    {truck.options.dealer.opts.map(
+                    {truck.dealer.opts.map(
                       ({ name, price }: { name: any; price: number }) => (
                         <div class="flex justify-between">
                           <span class="px-2 py-1 rounded-lg">{name}</span>
@@ -116,7 +124,7 @@ const trucks: TruckT[] = truckFilter(data.trucks);
                     )}
                     <div class="flex justify-between">
                       <span class="px-2 py-1 rounded-lg">Total</span>
-                      <span>{truck.options.dealer.total}</span>
+                      <span>{truck.dealer.total}</span>
                     </div>
                   </div>
                 ) : (
@@ -140,7 +148,7 @@ const trucks: TruckT[] = truckFilter(data.trucks);
                     </div>
                   </div>
                 ) : (
-                  <span>will not be merged</span>
+                  <span>None</span>
                 )}
               </td>
             </tr>

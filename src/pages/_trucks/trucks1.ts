@@ -7,24 +7,22 @@ const exteriorColorSilver = {
   exteriorColor: "Celestial Silver Metallic",
   exteriorColorShort: "silver",
 };
-const dealerDw = { dealer: "David Wilson", dealerShort: "dw" };
-const dealerFindlay = { dealer: "Findlay", dealerShort: "fn" };
-const dealerAutoNation = { dealer: "AutoNation", dealerShort: "an" };
-const dealerCc = { dealer: "Centennial Center", dealerShort: "cc" };
+const dealerDw = { dealerName: "David Wilson", dealerShort: "dw" };
+const dealerFindlay = { dealerName: "Findlay", dealerShort: "fn" };
+const dealerAutoNation = { dealerName: "AutoNation", dealerShort: "an" };
+const dealerCc = { dealerName: "Centennial Center", dealerShort: "cc" };
 const price = (
   bsrp: number,
   srp: number,
   listPrice: number,
   downPayment: number,
-  taxFees?: number,
-  rebate?: number,
+  financeDiscount?: number,
 ) => ({
   bsrp,
   srp,
   listPrice,
   downPayment,
-  taxFees,
-  rebate,
+  financeDiscount,
 });
 const strickerDate = (sdate: string) => ({ stickerDate: sdate });
 
@@ -39,6 +37,7 @@ type OptsT = {
 };
 
 type OptFT = () => OptT;
+type OptFFT = (price: number) => OptFT;
 
 const optsF = (...opts: OptFT[]): OptsT =>
   opts.reduce<OptsT>(
@@ -65,17 +64,27 @@ const mFlrLnrs: OptFT = () => ({
   name: "All Weather Floor Liners",
   price: 199,
 });
-const mTailGt: OptFT = () => ({ name: "Tailgate Insert", price: 99 });
+const mTailGt: OptFFT = (price?: number) => () => ({
+  name: "Tailgate Insert",
+  price: price || 99,
+});
 const mTubStep: OptFT = () => ({ name: "Oval Tube Step", price: 600 });
 const mBedLnr: OptFT = () => ({ name: "Spray-On Bed Liner", price: 575 });
 const mDorGrd: OptFT = () => ({ name: "Door Edge Guard", price: 160 });
-const mDelivery: OptFT = () => ({
+const mFog: OptFT = () => ({ name: "Rigid Fog Lights: White", price: 680 });
+const mBdgOvr: OptFT = () => ({ name: "Black Badge Overlay", price: 160 });
+const mWhelLcks: OptFT = () => ({ name: "Wheel Locks", price: 105 });
+const mDelivery: OptFFT = (price) => () => ({
   name: "Delivery, Proc & Handling ",
-  price: 1495,
+  price,
 });
+const mMudGrd: OptFT = () => ({ name: "Mudguard", price: 160 });
 
-const tState: OptFT = () => ({ name: "State Tax", price: 3039 });
-const tCounty: OptFT = () => ({ name: "County Tax", price: 677 });
+const tState: OptFFT = (price: number) => () => ({ name: "State Tax", price });
+const tCounty: OptFFT = (price: number) => () => ({
+  name: "County Tax",
+  price,
+});
 const tDoc: OptFT = () => ({ name: "Doc Fee", price: 499 });
 const tTitle: OptFT = () => ({ name: "Title Fee", price: 20 });
 const tTitleProc: OptFT = () => ({ name: "Title Processing Fee", price: 8 });
@@ -109,11 +118,15 @@ const dConPkgDis: OptFT = () => ({
   name: "Convenience Pkg Discount",
   price: -1995,
 });
+const dFinPkg: OptFT = () => ({
+  name: "Findlay Package",
+  price: 1595,
+});
 
 export type TruckT = {
   vin: string;
   trim: string;
-  dealer?: string;
+  dealerName?: string;
   dealerShort?: string;
   exteriorColor: string;
   exteriorColorShort: string;
@@ -124,10 +137,8 @@ export type TruckT = {
   cashRebate?: number;
   taxFees?: number;
   stickerDate?: string;
-  options: {
-    manufacture: OptsT;
-    dealer?: OptsT;
-  };
+  manufacture: OptsT;
+  dealer?: OptsT;
   tax?: OptsT;
 };
 
@@ -137,33 +148,31 @@ export const trucks: TruckT[] = [
     ...SR5,
     ...exteriorColorWhite,
     ...dealerDw,
-    ...price(40490, 43863, 43863, 4887, 4303, 500),
+    ...price(40490, 43863, 43863, 4887, 500),
     ...strickerDate("2025-06-14"),
-    options: {
-      manufacture: optsF(
-        mFullSpare,
-        mSideLed,
-        mFlrLnrs,
-        mTailGt,
-        mTubStep,
-        mBedLnr,
-        mDorGrd,
-        mDelivery,
-      ),
-      dealer: optsF(
-        dCharg,
-        dTint,
-        dHoodPro,
-        dDoorPro,
-        dFlrLnrs,
-        dWhelLcks,
-        dConPkg,
-        dConPkgDis,
-      ),
-    },
+    manufacture: optsF(
+      mFullSpare,
+      mSideLed,
+      mFlrLnrs,
+      mTailGt(),
+      mTubStep,
+      mBedLnr,
+      mDorGrd,
+      mDelivery(1495),
+    ),
+    dealer: optsF(
+      dCharg,
+      dTint,
+      dHoodPro,
+      dDoorPro,
+      dFlrLnrs,
+      dWhelLcks,
+      dConPkg,
+      dConPkgDis,
+    ),
     tax: optsF(
-      tState,
-      tCounty,
+      tState(3039),
+      tCounty(677),
       tDoc,
       tTitle,
       tTitleProc,
@@ -180,12 +189,29 @@ export const trucks: TruckT[] = [
     ...SR5,
     ...exteriorColorWhite,
     ...dealerFindlay,
-    ...price(40090, 43043, 44638, 4964, 4368),
+    ...price(40090, 43043, 44638, 4964, 500),
     ...strickerDate("2025-07-05"),
-    options: {
-      manufacture: optsF(mFullSpare),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(
+      mFullSpare,
+      mFlrLnrs,
+      mTailGt(),
+      mBedLnr,
+      mDelivery(1295),
+    ),
+    dealer: optsF(dFinPkg),
+    tax: optsF(
+      tState(3092),
+      tCounty(688),
+      tDoc,
+      tTitle,
+      tTitleProc,
+      tReg,
+      tVinIns,
+      tPlate,
+      tPrison,
+      tPermit,
+      tTire,
+    ),
   },
   {
     ...exteriorColorWhite,
@@ -193,39 +219,51 @@ export const trucks: TruckT[] = [
     ...SR5,
     ...exteriorColorWhite,
     ...dealerFindlay,
-    ...price(40490, 44038, 45633, 5064),
+    ...price(40490, 44038, 45633, 5064, 500),
     ...strickerDate("2025-06-25"),
-    options: {
-      manufacture: optsF(mFullSpare),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(
+      mBedLnr,
+      mMudGrd,
+      mFog,
+      mFullSpare,
+      mBdgOvr,
+      mTailGt(89),
+      mWhelLcks,
+      mFlrLnrs,
+      mDelivery(1495),
+    ),
+    dealer: optsF(dFinPkg),
+    tax: optsF(
+      tState(3160),
+      tCounty(704),
+      tDoc,
+      tTitle,
+      tTitleProc,
+      tReg,
+      tVinIns,
+      tPlate,
+      tPrison,
+      tPermit,
+      tTire,
+    ),
   },
   {
     vin: "3TMLB5JN8SM166796",
     ...SR5,
     ...exteriorColorWhite,
-    options: {
-      manufacture: optsF(mFullSpare, mUpgrdCld),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare, mUpgrdCld),
   },
   {
     vin: "3TMLB5JN5SM162317",
     ...SR5,
     ...exteriorColorWhite,
-    options: {
-      manufacture: optsF(mFullSpare, mUpgrdCld),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare, mUpgrdCld),
   },
   {
     vin: "3TMLB5JN1SM139701",
     ...SR5,
     ...exteriorColorWhite,
-    options: {
-      manufacture: optsF(mFullSpare, mUpgrdCld),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare, mUpgrdCld),
   },
   {
     vin: "3TMLB5JN4SM157657",
@@ -234,10 +272,7 @@ export const trucks: TruckT[] = [
     ...dealerDw,
     ...price(40490, 43544, 43544, 4855),
     ...strickerDate("2025-06-18"),
-    options: {
-      manufacture: optsF(mFullSpare),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare),
   },
   {
     vin: "3TMLB5JN3SM170366",
@@ -246,10 +281,7 @@ export const trucks: TruckT[] = [
     ...dealerFindlay,
     ...price(40490, 43778, 45373, 5038),
     ...strickerDate("2025-07-18"),
-    options: {
-      manufacture: optsF(mFullSpare),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare),
   },
   {
     vin: "3TMLB5JN9SM171683",
@@ -258,73 +290,49 @@ export const trucks: TruckT[] = [
     ...dealerAutoNation,
     ...price(40490, 43272, 45647, 5065),
     ...strickerDate("2025-08-01"),
-    options: {
-      manufacture: optsF(mFullSpare),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare),
   },
   {
     vin: "3TMLB5JNXSM157033",
     ...SR5,
     ...exteriorColorSilver,
-    options: {
-      manufacture: optsF(mFullSpare, mUpgrdCld),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare, mUpgrdCld),
   },
   {
     vin: "3TMLB5JN0SM156022",
     ...SR5,
     ...exteriorColorSilver,
-    options: {
-      manufacture: optsF(mFullSpare, mUpgrdCld),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare, mUpgrdCld),
   },
   {
     vin: "3TMLB5JN5SM157957",
     ...SR5,
     ...exteriorColorSilver,
-    options: {
-      manufacture: optsF(mFullSpare, mUpgrdCld),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare, mUpgrdCld),
   },
   {
     vin: "3TMLB5JN8SM151697",
     ...SR5,
     ...exteriorColorSilver,
-    options: {
-      manufacture: optsF(mFullSpare, mUpgrdCld),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare, mUpgrdCld),
   },
   {
     vin: "3TMLB5JN8SM159699",
     ...SR5,
     ...exteriorColorSilver,
-    options: {
-      manufacture: optsF(mFullSpare, mUpgrdCld),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare, mUpgrdCld),
   },
   {
     vin: "3TMLB5JN0SM170440",
     ...SR5,
     ...exteriorColorSilver,
-    options: {
-      manufacture: optsF(mFullSpare, mUpgrdCld),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare, mUpgrdCld),
   },
   {
     vin: "3TMLB5JN2SM163716",
     ...SR5,
     ...exteriorColorSilver,
-    options: {
-      manufacture: optsF(mFullSpare, mUpgrdCld),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare, mUpgrdCld),
   },
   {
     vin: "3TMLB5JN9SM171554",
@@ -333,28 +341,19 @@ export const trucks: TruckT[] = [
     ...dealerCc,
     ...price(40490, 47364, 47364, 2000),
     ...strickerDate("2025-08-01"),
-    options: {
-      manufacture: optsF(mFullSpare),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare),
   },
   {
     vin: "3TMLB5JN7SM167602",
     ...SR5,
     ...exteriorColorSilver,
-    options: {
-      manufacture: optsF(mFullSpare, mUpgrdCld),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare, mUpgrdCld),
   },
   {
     vin: "3TMLB5JN9SM148100",
     ...SR5,
     ...exteriorColorSilver,
-    options: {
-      manufacture: optsF(mFullSpare, mUpgrdCld),
-      tax: optsF(tState),
-    },
+    manufacture: optsF(mFullSpare, mUpgrdCld),
   },
 ];
 
@@ -366,7 +365,8 @@ export const data = {
 
 export const truckFilter = (trucks: TruckT[]) =>
   trucks.filter((t: TruckT) => {
-    const res = t.options.manufacture.opts.filter(
+    if (!t.manufacture) return true;
+    const res = t.manufacture.opts.filter(
       (mo: OptT) => mo.name === mUpgrdCld().name,
     );
     return res.length === 0;

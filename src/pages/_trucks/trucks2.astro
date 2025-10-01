@@ -1,8 +1,8 @@
 ---
-import { truckFilter, truckSort } from "./trucks1";
+import { truckFilter, truckSort, truckMinMax } from "./trucks1";
 import { data } from "./trucks1";
 import type { TruckT } from "./trucks1";
-const trucks: TruckT[] = truckSort(truckFilter(data.trucks));
+const trucks: TruckT[] = truckMinMax(truckSort(truckFilter(data.trucks)));
 ---
 
 <div class="mt-3 flex flex-col items-center">
@@ -17,7 +17,7 @@ const trucks: TruckT[] = truckSort(truckFilter(data.trucks));
     <thead class="text-sm">
       <tr class="py-2 bg-slate-300">
         <th class="py-2">VIN, Sticker, Dlr</th>
-        <th class="py-2">Price</th>
+        <th class="py-2" id="mmOpt">Price</th>
         <th class="mfgOptVis py-2">Mfg</th>
         <th class="dlrOptVis py-2">Dlr</th>
         <th class="taxOptVis py-2">Tax And Fees</th>
@@ -38,6 +38,7 @@ const trucks: TruckT[] = truckSort(truckFilter(data.trucks));
                   <div>{truck.stickerDate}</div>
                   <div>{truck.exteriorColorShort}</div>
                   <div>{truck.dealerShort}</div>
+                  <div class="mmOptVis">{truck.minMaxDelta}</div>
                 </div>
               </td>
               <td class="px-2 py-2 text-sm font-mono align-top">
@@ -203,9 +204,26 @@ const trucks: TruckT[] = truckSort(truckFilter(data.trucks));
     } else console.error("Failed finding taxOptVis");
   } else console.error("Failed finding taxOpt");
 
+  let mmVis = true;
+  const mmOpt = document.getElementById("mmOpt");
+  const mmOptVis = Array.from(document.querySelectorAll(".mmOptVis"));
+  if (mmOpt) {
+    if (mmOptVis.length) {
+      mmOpt.addEventListener("click", () => {
+        if (mmVis) {
+          mmOptVis.forEach((mov) => mov.classList.add("hidden"));
+        } else {
+          mmOptVis.forEach((mov) => mov.classList.remove("hidden"));
+        }
+        mmVis = !mmVis;
+      });
+    } else console.error("Failed finding mmOptVis");
+  } else console.error("Failed finding mmOpt");
+
   mfgOpt.click();
   dlrOpt.click();
   taxOpt.click();
+  mmOpt.click();
 </script>
 
 <style>

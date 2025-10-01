@@ -173,6 +173,7 @@ export type TruckT = {
   manufacture: OptsT;
   dealer?: OptsT;
   tax?: OptsT;
+  minMaxDelta?: number;
 };
 
 export const trucks: TruckT[] = [
@@ -509,6 +510,20 @@ export const truckSort = (trucks: TruckT[]) =>
     return a.listPrice + dealerA + taxA < b.listPrice + dealerB + taxB ? -1 : 1;
   });
 
+/* assume sorted low to high */
+export const truckMinMax = (trucks: TruckT[]) => {
+  const a = trucks[trucks.length - 1];
+  const taxA = a.tax ? a.tax.total : 0;
+  const dealerA = a.dealer ? a.dealer.total : 0;
+  const max = a.listPrice! + taxA + dealerA;
+  console.log({ a, max });
+  return trucks.map((b: TruckT) => {
+    const taxB = b.tax ? b.tax.total : 0;
+    const dealerB = b.dealer ? b.dealer.total : 0;
+    b.minMaxDelta = max - b.listPrice! - taxB - dealerB;
+    return b;
+  });
+};
 /* Findlay Henderson
  * 3TYKB5FN1ST43G934 trd sport for around 48K arriving October 31st.
  */

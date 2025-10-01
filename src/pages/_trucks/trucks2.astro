@@ -32,10 +32,10 @@ const trucks: TruckT[] = truckMinMax(truckSort(truckFilter(data.trucks)));
             <tr class="odd:bg-slate-100 even:bg-slate-200 border-y border-gray-300">
               <td class="px-2 py-2 text-xs align-top">
                 <div class="flex flex-col items-end">
+                  <div>{truck.vin}</div>
                   <a href={`/windowStickers/${truck.vin}.pdf`}>
-                    <div>{truck.vin}</div>
+                    <div>{truck.stickerDate}</div>
                   </a>
-                  <div>{truck.stickerDate}</div>
                   <div>{truck.exteriorColorShort}</div>
                   <div>{truck.dealerShort}</div>
                   <div class="mmOptVis">{truck.minMaxDelta}</div>

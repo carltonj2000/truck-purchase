@@ -74,6 +74,14 @@ const mDorGrd: OptFT = () => ({ name: "Door Edge Guard", price: 160 });
 const mFog: OptFT = () => ({ name: "Rigid Fog Lights: White", price: 680 });
 const mBdgOvr: OptFT = () => ({ name: "Black Badge Overlay", price: 160 });
 const mWhelLcks: OptFT = () => ({ name: "Wheel Locks", price: 105 });
+const mSpareLcks: OptFT = () => ({ name: "Spare Tire Locks", price: 75 });
+const mHeatSeat: OptFT = () => ({ name: "Heated Fron Seats", price: 585 });
+const mBedStep: OptFT = () => ({ name: "Bed Step", price: 455 });
+const mSmrtUsb: OptFT = () => ({ name: "Phone Cables - Smart USB", price: 70 });
+const mBedMat: OptFT = () => ({ name: "Bed Mat", price: 200 });
+const mBallMnt: OptFT = () => ({ name: "Bed Mat", price: 70 });
+const mExhaust: OptFT = () => ({ name: "Exhaust Tip Chrome", price: 120 });
+const mPstep: OptFT = () => ({ name: "Predator Step", price: 700 });
 const mDelivery: OptFFT = (price) => () => ({
   name: "Delivery, Proc & Handling ",
   price,
@@ -161,12 +169,12 @@ export const trucks: TruckT[] = [
       mDelivery(1495),
     ),
     dealer: optsF(
-      dCharg,
-      dTint,
-      dHoodPro,
-      dDoorPro,
-      dFlrLnrs,
-      dWhelLcks,
+      // dCharg,
+      // dTint,
+      // dHoodPro,
+      // dDoorPro,
+      // dFlrLnrs,
+      // dWhelLcks,
       dConPkg,
       dConPkgDis,
     ),
@@ -214,7 +222,6 @@ export const trucks: TruckT[] = [
     ),
   },
   {
-    ...exteriorColorWhite,
     vin: "3TMLB5JN1SM159902",
     ...SR5,
     ...exteriorColorWhite,
@@ -270,18 +277,65 @@ export const trucks: TruckT[] = [
     ...SR5,
     ...exteriorColorSilver,
     ...dealerDw,
-    ...price(40490, 43544, 43544, 4855),
+    ...price(40490, 43544, 43544, 4855, 500),
     ...strickerDate("2025-06-18"),
-    manufacture: optsF(mFullSpare),
+    manufacture: optsF(
+      mHeatSeat,
+      mFullSpare,
+      mBedStep,
+      mFlrLnrs,
+      mSpareLcks,
+      mDorGrd,
+      mDelivery(1495),
+    ),
+    dealer: optsF(dConPkg, dConPkgDis),
+    tax: optsF(
+      tState(3039),
+      tCounty(650), // made up numbers
+      tDoc,
+      tTitle,
+      tTitleProc,
+      tReg,
+      tVinIns,
+      tPlate,
+      tPrison,
+      tPermit,
+      tTire,
+    ),
   },
   {
     vin: "3TMLB5JN3SM170366",
     ...SR5,
     ...exteriorColorSilver,
     ...dealerFindlay,
-    ...price(40490, 43778, 45373, 5038),
-    ...strickerDate("2025-07-18"),
-    manufacture: optsF(mFullSpare),
+    ...price(40490, 43778, 45373, 5038, 500),
+    ...strickerDate("2025-07-30"),
+    manufacture: optsF(
+      mFullSpare,
+      mFlrLnrs,
+      mSmrtUsb,
+      mBedMat,
+      mBallMnt,
+      mExhaust,
+      mMudGrd,
+      mPstep,
+      mTailGt(89),
+      mDelivery(1595),
+    ),
+    dealer: optsF(dFinPkg),
+    tax: optsF(
+      tState(3142),
+      tCounty(700), // made up numbers
+      tDoc,
+      tTitle,
+      tTitleProc,
+      tReg,
+      tVinIns,
+      tPlate,
+      tPrison,
+      tPermit,
+      tTire,
+    ),
   },
   {
     vin: "3TMLB5JN9SM171683",

@@ -1,3 +1,8 @@
+// The data below was gathered from the
+// https://www.toyota.com/
+// Click `Shopping` and then `Search Inventory`.
+// Date captured form 09/23/25 12:30 PM on
+
 const SR5 = { trim: "SR5" };
 const exteriorColorWhite = {
   exteriorColor: "Ice Cap",
@@ -57,7 +62,7 @@ const mUpgrdCld: OptFT = () => ({
   price: 0,
 });
 const mSideLed: OptFT = () => ({
-  name: "IP Side Accessory - LED Lantern",
+  name: "IP Side Accry LED Lantern",
   price: 160,
 });
 const mFlrLnrs: OptFT = () => ({
@@ -119,7 +124,7 @@ const dDoorPro: OptFT = () => ({
 const dFlrLnrs: OptFT = () => ({ name: "All Weather Floor Liners", price: 0 });
 const dWhelLcks: OptFT = () => ({ name: "Wheel Locks", price: 0 });
 const dConPkg: OptFT = () => ({
-  name: "Toyota of LV Convenience Pkg",
+  name: "Tyta LV Convenience Pkg",
   price: 1995,
 });
 const dConPkgDis: OptFT = () => ({
@@ -412,8 +417,6 @@ export const trucks: TruckT[] = [
 ];
 
 export const data = {
-  date: "09/23/25",
-  time: "12:30 PM",
   trucks,
 };
 

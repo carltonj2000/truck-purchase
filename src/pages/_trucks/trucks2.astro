@@ -6,18 +6,14 @@ const trucks: TruckT[] = truckFilter(data.trucks);
 ---
 
 <div class="mt-3 flex flex-col items-center">
-  <h2>
-    Truck.On {data.date} at {data.time}
-  </h2>
   <p>
-    View/Hide
     <button id="mfgOpt" class="px-2 py-1 rounded-xl bg-slate-300">Mfg</button>
     or
     <button id="dlrOpt" class="px-2 py-1 rounded-xl bg-slate-300">Dlr</button>
     or
-    <button id="taxOpt" class="px-2 py-1 rounded-xl bg-slate-300">Tax</button>.
+    <button id="taxOpt" class="px-2 py-1 rounded-xl bg-slate-300">Tax</button>
   </p>
-  <table class="table-auto ml-2 mt-4">
+  <table class="table-auto ml-2 mt-3">
     <thead class="text-sm">
       <tr class="py-2 bg-slate-300">
         <th class="py-2">VIN, Sticker, Dlr</th>
@@ -45,53 +41,53 @@ const trucks: TruckT[] = truckFilter(data.trucks);
                 </div>
               </td>
               <td class="px-2 py-2 text-sm font-mono align-top">
-                <div class="flex justify-between items-end w-full">
+                <div class="flex justify-between items-center w-full">
                   <span class="text-xs text-slate-400">bsrp</span>
                   <span>{truck.bsrp}</span>
                 </div>
-                <div class="flex justify-between items-end w-full">
+                <div class="flex justify-between items-center w-full">
                   <span class="text-xs text-slate-400">mfg opts</span>
                   <span>{truck.srp - truck.bsrp}</span>
                 </div>
-                <div class="flex justify-between items-end w-full">
+                <div class="flex justify-between items-center w-full">
                   <span class="text-xs text-slate-400">srp</span>
                   <span>{truck.srp}</span>
                 </div>
-                <div class="flex justify-between items-end w-full">
+                <div class="flex justify-between items-center w-full">
                   <span class="text-xs text-slate-400">dlr opts</span>
                   <span>{dealer}</span>
                 </div>
-                <div class="flex justify-between items-end w-full">
+                <div class="flex justify-between items-center w-full">
                   <span class="text-xs text-slate-400">list</span>
                   <span>{truck.listPrice}</span>
                 </div>
-                <div class="flex justify-between items-end w-full">
+                <div class="flex justify-between items-center w-full">
                   <span class="text-xs text-slate-400">tax Fees</span>
                   <span>{tax}</span>
                 </div>
-                <div class="flex justify-between items-end w-full font-semibold">
+                <div class="flex justify-between items-center w-full font-semibold">
                   <span class="text-xs text-slate-700">Total</span>
                   <span>
                     {truck.listPrice + tax + dealer}
                   </span>
                 </div>
-                <div class="flex justify-between items-end w-full">
+                <div class="flex justify-between items-center w-full">
                   <span class="text-xs text-slate-400">down</span>
                   <span>{truck.downPayment}</span>
                 </div>
-                <div class="flex justify-between items-end w-full">
+                <div class="flex justify-between items-center w-full">
                   <span class="text-xs text-slate-400">taxable</span>
                   <span>{truck.listPrice + truck.downPayment}</span>
                 </div>
-                <div class="flex justify-between items-end w-full">
+                <div class="flex justify-between items-center w-full">
                   <span class="text-xs text-slate-400">finance dis</span>
                   <span>{truck.financeDiscount}</span>
                 </div>
-                <div class="flex justify-between items-end w-full">
+                <div class="flex justify-between items-center w-full gap-1">
                   <span class="text-xs text-slate-400">finance down</span>
                   <span>{truck.downPayment - truck.financeDiscount}</span>
                 </div>
-                <div class="flex justify-between items-end w-full font-semibold">
+                <div class="flex justify-between items-center w-full font-semibold">
                   <span class="text-xs text-slate-700">Financed</span>
                   <span>{truck.listPrice + tax - truck.downPayment}</span>
                 </div>
@@ -100,7 +96,7 @@ const trucks: TruckT[] = truckFilter(data.trucks);
                 <div class="flex flex-col">
                   {truck.manufacture.opts.map(
                     ({ name, price }: { name: any; price: number }) => (
-                      <div class="flex justify-between">
+                      <div class="flex justify-between items-center">
                         <span class="px-2 py-1 rounded-lg">{name}</span>
                         <span>{price}</span>
                       </div>
@@ -117,7 +113,7 @@ const trucks: TruckT[] = truckFilter(data.trucks);
                   <div class="flex flex-col">
                     {truck.dealer.opts.map(
                       ({ name, price }: { name: any; price: number }) => (
-                        <div class="flex justify-between">
+                        <div class="flex justify-between items-center">
                           <span class="px-2 py-1 rounded-lg">{name}</span>
                           <span>{price}</span>
                         </div>
@@ -137,7 +133,7 @@ const trucks: TruckT[] = truckFilter(data.trucks);
                   <div class="flex flex-col">
                     {
                       truck.tax.opts.map(({name, price}) => (
-                        <div class="flex justify-between">
+                        <div class="flex justify-between items-center">
                           <span class="px-2 py-1 rounded-lg">{name}</span>
                           <span>{price}</span>
                         </div>
@@ -190,11 +186,28 @@ const trucks: TruckT[] = truckFilter(data.trucks);
         }
         dlrVis = !dlrVis;
       });
-    } else console.error("Failed finding mfgOptVis");
-  } else console.error("Failed finding mfgOpt");
+    } else console.error("Failed finding dlrOptVis");
+  } else console.error("Failed finding dlrOpt");
+
+  let taxVis = true;
+  const taxOpt = document.getElementById("taxOpt");
+  const taxOptVis = Array.from(document.querySelectorAll(".taxOptVis"));
+  if (taxOpt) {
+    if (taxOptVis.length) {
+      taxOpt.addEventListener("click", () => {
+        if (dlrVis) {
+          taxOptVis.forEach((mov) => mov.classList.add("hidden"));
+        } else {
+          taxOptVis.forEach((mov) => mov.classList.remove("hidden"));
+        }
+        taxVis = !taxVis;
+      });
+    } else console.error("Failed finding taxOptVis");
+  } else console.error("Failed finding taxOpt");
 
   // mfgOpt.click();
   // dlrOpt.click();
+  // taxOpt.click();
 </script>
 
 <style>

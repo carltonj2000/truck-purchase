@@ -1,8 +1,8 @@
 ---
-import { truckFilter } from "./trucks1";
+import { truckFilter, truckSort } from "./trucks1";
 import { data } from "./trucks1";
 import type { TruckT } from "./trucks1";
-const trucks: TruckT[] = truckFilter(data.trucks);
+const trucks: TruckT[] = truckSort(truckFilter(data.trucks));
 ---
 
 <div class="mt-3 flex flex-col items-center">
@@ -67,9 +67,7 @@ const trucks: TruckT[] = truckFilter(data.trucks);
                 </div>
                 <div class="flex justify-between items-center w-full font-semibold">
                   <span class="text-xs text-slate-700">Total</span>
-                  <span>
-                    {truck.listPrice + tax + dealer}
-                  </span>
+                  <span>{truck.listPrice + tax + dealer}</span>
                 </div>
                 <div class="flex justify-between items-center w-full">
                   <span class="text-xs text-slate-400">down</span>
@@ -95,7 +93,7 @@ const trucks: TruckT[] = truckFilter(data.trucks);
               <td class="mfgOptVis px-2 py-2 text-xs align-top">
                 <div class="flex flex-col">
                   {truck.manufacture.opts.map(
-                    ({ name, price }: { name: any; price: number }) => (
+                    ({ name, price }: { name: string; price: number }) => (
                       <div class="flex justify-between items-center">
                         <span class="px-2 py-1 rounded-lg">{name}</span>
                         <span>{price}</span>
@@ -112,7 +110,7 @@ const trucks: TruckT[] = truckFilter(data.trucks);
                 {truck.dealer ? (
                   <div class="flex flex-col">
                     {truck.dealer.opts.map(
-                      ({ name, price }: { name: any; price: number }) => (
+                      ({ name, price }: { name: string; price: number }) => (
                         <div class="flex justify-between items-center">
                           <span class="px-2 py-1 rounded-lg">{name}</span>
                           <span>{price}</span>
@@ -131,14 +129,14 @@ const trucks: TruckT[] = truckFilter(data.trucks);
               <td class="taxOptVis px-2 py-2 text-xs align-top">
                 {truck.tax ? (
                   <div class="flex flex-col">
-                    {
-                      truck.tax.opts.map(({name, price}) => (
+                    {truck.tax.opts.map(
+                      ({ name, price }: { name: string; price: number }) => (
                         <div class="flex justify-between items-center">
                           <span class="px-2 py-1 rounded-lg">{name}</span>
                           <span>{price}</span>
                         </div>
-                      ))
-                    }
+                      ),
+                    )}
                     <div class="flex justify-between">
                       <span class="px-2 py-1 rounded-lg">Total</span>
                       <span>{truck.tax.total}</span>
@@ -195,7 +193,7 @@ const trucks: TruckT[] = truckFilter(data.trucks);
   if (taxOpt) {
     if (taxOptVis.length) {
       taxOpt.addEventListener("click", () => {
-        if (dlrVis) {
+        if (taxVis) {
           taxOptVis.forEach((mov) => mov.classList.add("hidden"));
         } else {
           taxOptVis.forEach((mov) => mov.classList.remove("hidden"));
@@ -205,9 +203,9 @@ const trucks: TruckT[] = truckFilter(data.trucks);
     } else console.error("Failed finding taxOptVis");
   } else console.error("Failed finding taxOpt");
 
-  // mfgOpt.click();
-  // dlrOpt.click();
-  // taxOpt.click();
+  mfgOpt.click();
+  dlrOpt.click();
+  taxOpt.click();
 </script>
 
 <style>

@@ -69,10 +69,12 @@ const mFlrLnrs: OptFT = () => ({
   name: "All Weather Floor Liners",
   price: 199,
 });
-const mTailGt: OptFFT = (price?: number) => () => ({
-  name: "Tailgate Insert",
-  price: price || 99,
-});
+const mTailGt: OptFFT =
+  (price: number = 99) =>
+    () => ({
+      name: "Tailgate Insert",
+      price,
+    });
 const mTubStep: OptFT = () => ({ name: "Oval Tube Step", price: 600 });
 const mBedLnr: OptFT = () => ({ name: "Spray-On Bed Liner", price: 575 });
 const mDorGrd: OptFT = () => ({ name: "Door Edge Guard", price: 160 });
@@ -81,11 +83,21 @@ const mBdgOvr: OptFT = () => ({ name: "Black Badge Overlay", price: 160 });
 const mWhelLcks: OptFT = () => ({ name: "Wheel Locks", price: 105 });
 const mSpareLcks: OptFT = () => ({ name: "Spare Tire Locks", price: 75 });
 const mHeatSeat: OptFT = () => ({ name: "Heated Fron Seats", price: 585 });
+const mEmrgncyKit: OptFT = () => ({ name: "Emergency Kit", price: 75 });
 const mBedStep: OptFT = () => ({ name: "Bed Step", price: 455 });
 const mSmrtUsb: OptFT = () => ({ name: "Phone Cables - Smart USB", price: 70 });
 const mBedMat: OptFT = () => ({ name: "Bed Mat", price: 200 });
+const mCrgoNet: OptFT = () => ({ name: "Bed Cargo Net", price: 59 });
 const mBallMnt: OptFT = () => ({ name: "Bed Mat", price: 70 });
 const mExhaust: OptFT = () => ({ name: "Exhaust Tip Chrome", price: 120 });
+const mLift: OptFT = () => ({
+  name: "TRD 2.5 Suspension Lift Kit",
+  price: 3400,
+});
+const mExhaustBlk: OptFT = () => ({
+  name: "Exhaust Tip Black Chrome",
+  price: 130,
+});
 const mPstep: OptFT = () => ({ name: "Predator Step", price: 700 });
 const mDelivery: OptFFT = (price) => () => ({
   name: "Delivery, Proc & Handling ",
@@ -99,6 +111,7 @@ const tCounty: OptFFT = (price: number) => () => ({
   price,
 });
 const tDoc: OptFT = () => ({ name: "Doc Fee", price: 499 });
+const tDoc2: OptFT = () => ({ name: "Doc Fee", price: 799 });
 const tTitle: OptFT = () => ({ name: "Title Fee", price: 20 });
 const tTitleProc: OptFT = () => ({ name: "Title Processing Fee", price: 8 });
 const tReg: OptFT = () => ({ name: "Registration Fee", price: 38 });
@@ -121,8 +134,15 @@ const dDoorPro: OptFT = () => ({
   name: "XPEL Paint Protection Door",
   price: 0,
 });
+/*
 const dFlrLnrs: OptFT = () => ({ name: "All Weather Floor Liners", price: 0 });
 const dWhelLcks: OptFT = () => ({ name: "Wheel Locks", price: 0 });
+*/
+const dApprProtec: OptFT = () => ({ name: "Apperance Pro 3 yrs", price: 749 });
+const dDentProtec: OptFT = () => ({ name: "Dent Pro 3 yrs", price: 749 });
+const dCentrCon: OptFT = () => ({ name: "Center Console Tray", price: 79 });
+const dWinTint: OptFT = () => ({ name: "Ceramic Window Ting", price: 599 });
+const dWhlLock: OptFT = () => ({ name: "Wheel Locks", price: 199 });
 const dConPkg: OptFT = () => ({
   name: "Tyta LV Convenience Pkg",
   price: 1995,
@@ -167,6 +187,7 @@ export const trucks: TruckT[] = [
       mFullSpare,
       mSideLed,
       mFlrLnrs,
+      // @ts-ignore
       mTailGt(),
       mTubStep,
       mBedLnr,
@@ -174,10 +195,10 @@ export const trucks: TruckT[] = [
       mDelivery(1495),
     ),
     dealer: optsF(
-      // dCharg,
-      // dTint,
-      // dHoodPro,
-      // dDoorPro,
+      dCharg,
+      dTint,
+      dHoodPro,
+      dDoorPro,
       // dFlrLnrs,
       // dWhelLcks,
       dConPkg,
@@ -207,6 +228,7 @@ export const trucks: TruckT[] = [
     manufacture: optsF(
       mFullSpare,
       mFlrLnrs,
+      // @ts-ignore
       mTailGt(),
       mBedLnr,
       mDelivery(1295),
@@ -347,9 +369,35 @@ export const trucks: TruckT[] = [
     ...SR5,
     ...exteriorColorSilver,
     ...dealerAutoNation,
-    ...price(40490, 43272, 45647, 5065),
+    ...price(40490, 43272, 45647, 5065, 500),
     ...strickerDate("2025-08-01"),
-    manufacture: optsF(mFullSpare),
+    manufacture: optsF(
+      mFullSpare,
+      mFlrLnrs,
+      mSmrtUsb,
+      mEmrgncyKit,
+      mExhaustBlk,
+      mDorGrd,
+      mCrgoNet,
+      mMudGrd,
+      mBdgOvr,
+      mTailGt(89),
+      mDelivery(1595),
+    ),
+    dealer: optsF(dApprProtec, dDentProtec, dCentrCon, dWinTint, dWhlLock),
+    tax: optsF(
+      tState(3182),
+      tCounty(708), // made up numbers
+      tDoc2,
+      tTitle,
+      tTitleProc,
+      tReg,
+      tVinIns,
+      tPlate,
+      tPrison,
+      tPermit,
+      tTire,
+    ),
   },
   {
     vin: "3TMLB5JNXSM157033",
@@ -398,9 +446,31 @@ export const trucks: TruckT[] = [
     ...SR5,
     ...exteriorColorSilver,
     ...dealerCc,
-    ...price(40490, 47364, 47364, 2000),
+    ...price(40490, 47364, 47364, 2000, 0),
     ...strickerDate("2025-08-01"),
-    manufacture: optsF(mFullSpare),
+    manufacture: optsF(
+      mMudGrd,
+      mFullSpare,
+      mLift,
+      mFlrLnrs,
+      mBedLnr,
+      mPstep,
+      mBdgOvr,
+      mDelivery(1595),
+    ),
+    tax: optsF(
+      tState(3092),
+      tCounty(688),
+      tDoc,
+      tTitle,
+      tTitleProc,
+      tReg,
+      tVinIns,
+      tPlate,
+      tPrison,
+      tPermit,
+      tTire,
+    ),
   },
   {
     vin: "3TMLB5JN7SM167602",
@@ -427,6 +497,16 @@ export const truckFilter = (trucks: TruckT[]) =>
       (mo: OptT) => mo.name === mUpgrdCld().name,
     );
     return res.length === 0;
+  });
+
+export const truckSort = (trucks: TruckT[]) =>
+  trucks.sort((a: TruckT, b: TruckT) => {
+    if (!a.listPrice || !b.listPrice) return 1;
+    const taxA = a.tax ? a.tax.total : 0;
+    const dealerA = a.dealer ? a.dealer.total : 0;
+    const taxB = b.tax ? b.tax.total : 0;
+    const dealerB = b.dealer ? b.dealer.total : 0;
+    return a.listPrice + dealerA + taxA < b.listPrice + dealerB + taxB ? -1 : 1;
   });
 
 /* Findlay Henderson

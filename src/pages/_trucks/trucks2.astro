@@ -28,6 +28,7 @@ const trucks: TruckT[] = truckMinMax(truckSort(truckFilter(data.trucks)));
         trucks.map((truck: any) => {
           const tax = truck.tax ? truck.tax.total : 0;
           const dealer = truck.dealer ? truck.dealer.total : 0;
+          const hideNames = ""; // hidden"; // or '';
           return (
             <tr class="odd:bg-slate-100 even:bg-slate-200 border-y border-gray-300">
               <td class="px-2 py-2 text-xs align-top">
@@ -43,51 +44,67 @@ const trucks: TruckT[] = truckMinMax(truckSort(truckFilter(data.trucks)));
               </td>
               <td class="px-2 py-2 text-sm font-mono align-top">
                 <div class="flex justify-between items-center w-full">
-                  <span class="text-xs text-slate-400">bsrp</span>
+                  <span class={`text-xs text-slate-400` + hideNames}>bsrp</span>
                   <span>{truck.bsrp}</span>
                 </div>
                 <div class="flex justify-between items-center w-full">
-                  <span class="text-xs text-slate-400">mfg opts</span>
+                  <span class={`text-xs text-slate-400` + hideNames}>
+                    mfg opts
+                  </span>
                   <span>{truck.srp - truck.bsrp}</span>
                 </div>
                 <div class="flex justify-between items-center w-full">
-                  <span class="text-xs text-slate-400">srp</span>
+                  <span class={`text-xs text-slate-400` + hideNames}>srp</span>
                   <span>{truck.srp}</span>
                 </div>
                 <div class="flex justify-between items-center w-full">
-                  <span class="text-xs text-slate-400">dlr opts</span>
+                  <span class={`text-xs text-slate-400` + hideNames}>
+                    dlr opts
+                  </span>
                   <span>{dealer}</span>
                 </div>
                 <div class="flex justify-between items-center w-full">
-                  <span class="text-xs text-slate-400">list</span>
+                  <span class={`text-xs text-slate-400` + hideNames}>list</span>
                   <span>{truck.listPrice}</span>
                 </div>
                 <div class="flex justify-between items-center w-full">
-                  <span class="text-xs text-slate-400">tax Fees</span>
+                  <span class={`text-xs text-slate-400` + hideNames}>
+                    tax Fees
+                  </span>
                   <span>{tax}</span>
                 </div>
                 <div class="flex justify-between items-center w-full font-semibold">
-                  <span class="text-xs text-slate-700">Total</span>
+                  <span class={`text-xs text-slate-700` + hideNames}>
+                    Total
+                  </span>
                   <span>{truck.listPrice + tax + dealer}</span>
                 </div>
                 <div class="flex justify-between items-center w-full">
-                  <span class="text-xs text-slate-400">down</span>
+                  <span class={`text-xs text-slate-400` + hideNames}>down</span>
                   <span>{truck.downPayment}</span>
                 </div>
                 <div class="flex justify-between items-center w-full">
-                  <span class="text-xs text-slate-400">taxable</span>
+                  <span class={`text-xs text-slate-400` + hideNames}>
+                    taxable
+                  </span>
                   <span>{truck.listPrice + truck.downPayment}</span>
                 </div>
                 <div class="flex justify-between items-center w-full">
-                  <span class="text-xs text-slate-400">finance dis</span>
+                  <span class={`text-xs text-slate-400` + hideNames}>
+                    finance dis
+                  </span>
                   <span>{truck.financeDiscount}</span>
                 </div>
                 <div class="flex justify-between items-center w-full gap-1">
-                  <span class="text-xs text-slate-400">finance down</span>
+                  <span class={`text-xs text-slate-400` + hideNames}>
+                    finance down
+                  </span>
                   <span>{truck.downPayment - truck.financeDiscount}</span>
                 </div>
                 <div class="flex justify-between items-center w-full font-semibold">
-                  <span class="text-xs text-slate-700">Financed</span>
+                  <span class={`text-xs text-slate-700` + hideNames}>
+                    Financed
+                  </span>
                   <span>{truck.listPrice + tax - truck.downPayment}</span>
                 </div>
               </td>

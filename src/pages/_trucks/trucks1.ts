@@ -90,6 +90,10 @@ const mBedMat: OptFT = () => ({ name: "Bed Mat", price: 200 });
 const mCrgoNet: OptFT = () => ({ name: "Bed Cargo Net", price: 59 });
 const mBallMnt: OptFT = () => ({ name: "Bed Mat", price: 70 });
 const mExhaust: OptFT = () => ({ name: "Exhaust Tip Chrome", price: 120 });
+const mCarpetFlrMat: OptFT = () => ({
+  name: "Carpeted Floor Mats",
+  price: 189,
+});
 const mLift: OptFT = () => ({
   name: "TRD 2.5 Suspension Lift Kit",
   price: 3400,
@@ -219,6 +223,8 @@ export const trucks: TruckT[] = [
       tTire,
     ),
   },
+  /* Sold as of 10/1/25 by Moses Buraleh */
+  /*
   {
     vin: "3TMLB5JN9SM163910",
     ...SR5,
@@ -249,6 +255,7 @@ export const trucks: TruckT[] = [
       tTire,
     ),
   },
+    */
   {
     vin: "3TMLB5JN1SM159902",
     ...SR5,
@@ -365,7 +372,8 @@ export const trucks: TruckT[] = [
       tTire,
     ),
   },
-  {
+  /* commented out because i found a cheaper one below */
+  /*  { 
     vin: "3TMLB5JN9SM171683",
     ...SR5,
     ...exteriorColorSilver,
@@ -399,7 +407,75 @@ export const trucks: TruckT[] = [
       tPermit,
       tTire,
     ),
+  }, */
+  /* auto nation way to expensive */
+  /*
+  {
+    vin: "3TMLB5JN9SM171683",
+    ...SR5,
+    ...exteriorColorSilver,
+    ...dealerAutoNation,
+    ...price(40490, 43272, 45647, 5065, 500),
+    ...strickerDate("2025-08-01"),
+    manufacture: optsF(
+      mFullSpare,
+      mFlrLnrs,
+      mSmrtUsb,
+      mEmrgncyKit,
+      mDorGrd,
+      mExhaustBlk,
+      mCrgoNet,
+      mMudGrd,
+      mBdgOvr,
+      mTailGt(89),
+      mDelivery(1595),
+    ),
+    dealer: optsF(dApprProtec, dDentProtec, dCentrCon, dWinTint, dWhlLock),
+    tax: optsF(
+      tState(3182),
+      tCounty(708),
+      tDoc2,
+      tTitle,
+      tTitleProc,
+      tReg,
+      tVinIns,
+      tPlate,
+      tPrison,
+      tPermit,
+      tTire,
+    ),
   },
+  {
+    vin: "3TMLB5JN0SM176609",
+    ...SR5,
+    ...exteriorColorWhite,
+    ...dealerAutoNation,
+    ...price(40490, 43879, 46254, 5126, 500),
+    ...strickerDate("2025-08-14"),
+    manufacture: optsF(
+      mFlrLnrs,
+      mDorGrd,
+      mBedLnr,
+      mMudGrd,
+      mPstep,
+      mDelivery(1595),
+    ),
+    dealer: optsF(dApprProtec, dDentProtec, dCentrCon, dWinTint, dWhlLock),
+    tax: optsF(
+      tState(3223),
+      tCounty(718),
+      tDoc2,
+      tTitle,
+      tTitleProc,
+      tReg,
+      tVinIns,
+      tPlate,
+      tPrison,
+      tPermit,
+      tTire,
+    ),
+  },
+  */
   {
     vin: "3TMLB5JNXSM157033",
     ...SR5,
@@ -441,6 +517,28 @@ export const trucks: TruckT[] = [
     ...SR5,
     ...exteriorColorSilver,
     manufacture: optsF(mFullSpare, mUpgrdCld),
+  },
+  {
+    vin: "3TMLB5JNXSM193238",
+    ...SR5,
+    ...exteriorColorWhite,
+    ...dealerCc,
+    ...price(40490, 42529, 42529, 2000, 0),
+    ...strickerDate("2025-08-01"),
+    manufacture: optsF(mFullSpare, mMudGrd, mCarpetFlrMat, mDelivery(1595)),
+    tax: optsF(
+      tState(3020), // made up since they don't provide it
+      tCounty(646), // made up since they don't provide it
+      tDoc,
+      tTitle,
+      tTitleProc,
+      tReg,
+      tVinIns,
+      tPlate,
+      tPrison,
+      tPermit,
+      tTire,
+    ),
   },
   {
     vin: "3TMLB5JN9SM171554",
@@ -516,7 +614,6 @@ export const truckMinMax = (trucks: TruckT[]) => {
   const taxA = a.tax ? a.tax.total : 0;
   const dealerA = a.dealer ? a.dealer.total : 0;
   const max = a.listPrice! + taxA + dealerA;
-  console.log({ a, max });
   return trucks.map((b: TruckT) => {
     const taxB = b.tax ? b.tax.total : 0;
     const dealerB = b.dealer ? b.dealer.total : 0;
